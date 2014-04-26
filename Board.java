@@ -10,36 +10,31 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Arrays;
 import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Board extends JPanel 
 {
     private final int BOARD_SIZE=4;
-    private int[][] board = new int[4][4];
-    private JButton[][] buttons = new JButton[4][4];
-    private boolean[][] changed = new boolean[4][4];
-    private Random r = new Random();
+    private final int[][] board = new int[4][4];
+    private final JButton[][] buttons = new JButton[4][4];
+    private final boolean[][] changed = new boolean[4][4];
+    private final Random r = new Random();
     private boolean winner;
     
     
     public Board(){
+        
         winner=false;
         initializeBoard();
         setBackground(Color.BLACK);
         LayoutManager grid=new GridLayout(4, 4, 1, 1);
         setLayout(grid);
-       
-        //setFocusable(true);
+      
         
         addKeyListener(new KeyAdapter() {
             @Override
@@ -58,33 +53,43 @@ public class Board extends JPanel
         
     }
     
+    /**
+     * Sets all starting boxes to 0, adds random starting number
+     */
     private void initializeBoard(){
         for(int row=0; row<board.length; row++){
             for(int col=0; col<board[row].length; col++){
                 board[row][col]=0;
-                //StringBuilder s = new StringBuilder();
-                //s.append(board[row][col]);
+                
                 buttons[row][col] = new JButton();
                 buttons [row] [col].setFont (new Font ("Arial", Font.BOLD, 50));
                 buttons [row] [col].setBackground (Color.BLACK); 
-                //buttons[row][col].setText ( s.toString());
+                
+                //If true, allows buttons to be clicked and looses focus on the frame
                 add(buttons[row][col]).setFocusable(false); 
             }
         }
         addRandomNum();
-        
-        
     }
+    
     //Arrays.fill doesnt worl with booleans?
+    /**
+     * Boolean parallel array that shows whether a space was modified in that turn
+     * Prevents 4->4->8 = 16
+     */
     private void setChanged(){
         for(int row=0; row<changed.length; row++){
             for(int col=0; col<changed[row].length; col++){
                 changed[row][col]=false;
             }
-        }
-            
+        }  
     }
     
+    /**
+     * Adds random number 2 or 4 to randomly selected spot containing a zero
+     */
+    //TODO: isFull
+    //TODO: possibleMove
     private void addRandomNum(){
         int randRow = r.nextInt(4);
         int randCol = r.nextInt(4);
