@@ -8,6 +8,7 @@ package pkg2048;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.event.KeyAdapter;
@@ -25,11 +26,13 @@ public class Board extends JPanel
     private final boolean[][] changed = new boolean[4][4];
     private final Random r = new Random();
     private boolean winner;
+    private boolean hasWon;
     
     
     public Board(){
         
         winner=false;
+        hasWon=false;
         initializeBoard();
         setBackground(Color.BLACK);
         LayoutManager grid=new GridLayout(4, 4, 1, 1);
@@ -61,9 +64,9 @@ public class Board extends JPanel
             for(int col=0; col<board[row].length; col++){
                 board[row][col]=0;
                 
-                buttons[row][col] = new JButton();
+                buttons [row][col] = new JButton();
                 buttons [row] [col].setFont (new Font ("Arial", Font.BOLD, 50));
-                buttons [row] [col].setBackground (Color.BLACK); 
+                buttons [row] [col].setBackground (Color.GRAY); 
                 
                 //If true, allows buttons to be clicked and looses focus on the frame
                 add(buttons[row][col]).setFocusable(false); 
@@ -91,6 +94,7 @@ public class Board extends JPanel
     //TODO: isFull
     //TODO: possibleMove
     private void addRandomNum(){
+        if(!isFull()){
         int randRow = r.nextInt(4);
         int randCol = r.nextInt(4);
         
@@ -111,6 +115,12 @@ public class Board extends JPanel
                 break;
             default:
                 break;
+        }
+        
+        repaint();
+        }
+        else{
+            endGame();
         }
         
     }
@@ -169,6 +179,7 @@ public class Board extends JPanel
         }
         setChanged();
         addRandomNum();
+        repaint();
     }
     
     public void moveRight(){
@@ -224,6 +235,7 @@ public class Board extends JPanel
         }
         setChanged();
         addRandomNum();
+        repaint();
         
     }
     public void moveDown(){
@@ -277,6 +289,7 @@ public class Board extends JPanel
         }
         setChanged();
         addRandomNum();
+        repaint();
         
     }
     public void moveLeft(){
@@ -330,10 +343,14 @@ public class Board extends JPanel
         }
         setChanged();
         addRandomNum();
+        repaint();
         
     }
     
     public void winGame(){
+        
+        if(!hasWon){
+            hasWon=true;
         winner=true;
         JFrame frame = new JFrame("You Win!");
         
@@ -345,6 +362,7 @@ public class Board extends JPanel
         label.setText ( "You win!");
         frame.add(label);
         frame.setVisible ( true);
+        }
     }
     public boolean isWinner(){
         return winner;
@@ -365,4 +383,88 @@ public class Board extends JPanel
           return s.toString();
     }
     
+    public boolean isFull(){
+        boolean notFull=true;
+        for(int i =0; i<BOARD_SIZE; i++){
+            for(int j = 0; j<BOARD_SIZE; j++){
+                if(board[i][j]!=0){
+                    //
+                }
+                else{
+                    notFull=false;
+                    return notFull;
+                }
+            }
+        }
+        return notFull;
+    }
+    
+    public void endGame(){
+        hasWon=true;
+        winner=true;
+        JFrame frame = new JFrame("Game Over");
+        
+        frame.setSize(200,100);
+        frame.setLocationRelativeTo(null);
+        JButton label = new JButton("Game Over");
+        label.setFont (new Font ("Arial", Font.BOLD, 20));
+        label.setBackground (Color.BLACK); 
+        label.setText ( "Game Over");
+        frame.add(label);
+        frame.setVisible ( true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+   @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        for(int i =0; i<BOARD_SIZE; i++){
+            for(int j = 0; j<BOARD_SIZE; j++){
+                
+                switch (board[i][j]){
+                    case 2:
+                        buttons[i][j].setBackground(new Color(255,240,245));
+                        break;
+                    case 4:
+                        buttons[i][j].setBackground(new Color(255,228,181));
+                        break;
+                    case 8:
+                        buttons[i][j].setBackground(new Color(255,235,205));
+                        break;
+                    case 16:
+                        buttons[i][j].setBackground(new Color(216,191,216));
+                        break;
+                    case 32:
+                        buttons[i][j].setBackground(new Color(245,255,250));
+                        break;
+                    case 64:
+                        buttons[i][j].setBackground(new Color(230,230,250));
+                        break;
+                    case 128:
+                        buttons[i][j].setBackground(new Color(240,248,255));
+                        break;
+                    case 256:
+                        buttons[i][j].setBackground(new Color(240,255,240));
+                        break;
+                    case 512:
+                        buttons[i][j].setBackground(new Color(176,196,222));
+                        break;
+                    case 1024:
+                        buttons[i][j].setBackground(new Color(255,250,250));
+                        break;
+                    case 2048:
+                        buttons[i][j].setBackground(new Color(112,128,144));
+                        break;
+                    default:
+                        buttons[i][j].setBackground(new Color(245,245,245));
+                        break;
+                }
+                buttons[i][j].setOpaque(true);
+                buttons[i][j].setBorderPainted(false);
+                
+            }
+        
+            }
+    }
 }
