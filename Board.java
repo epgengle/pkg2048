@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//These are changes made in the frame full branch. Will they show up?
 package pkg2048;
 
 /**
